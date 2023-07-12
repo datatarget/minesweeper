@@ -58,6 +58,7 @@ function createBoard(rows, cols, numMines) {
 }
 
 // Function to reveal a cell
+// Function to reveal a cell
 function revealCell(board, row, col) {
   const cell = board[row][col];
 
@@ -74,21 +75,37 @@ function revealCell(board, row, col) {
   }
 
   if (cell.neighborMines === 0) {
-    // Reveal neighboring cells recursively
-    for (let x = -1; x <= 1; x++) {
-      for (let y = -1; y <= 1; y++) {
-        if (
-          row + x >= 0 &&
-          row + x < board.length &&
-          col + y >= 0 &&
-          col + y < board[0].length &&
-          !board[row + x][col + y].isRevealed
-        ) {
-          revealCell(board, row + x, col + y);
-        }
+    const directions = [
+      { x: -1, y: -1 },
+      { x: -1, y: 0 },
+      { x: -1, y: 1 },
+      { x: 0, y: -1 },
+      { x: 0, y: 1 },
+      { x: 1, y: -1 },
+      { x: 1, y: 0 },
+      { x: 1, y: 1 },
+    ];
+
+    for (const direction of directions) {
+      const newRow = row + direction.x;
+      const newCol = col + direction.y;
+
+      if (isValidCell(board, newRow, newCol)) {
+        revealCell(board, newRow, newCol);
       }
     }
   }
+}
+
+// Function to check if a cell is valid
+function isValidCell(board, row, col) {
+  return (
+    row >= 0 &&
+    row < board.length &&
+    col >= 0 &&
+    col < board[0].length &&
+    !board[row][col].isRevealed
+  );
 }
 
 // Function to mark a cell with a question mark
