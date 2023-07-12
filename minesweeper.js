@@ -36,28 +36,31 @@ function createBoard(rows, cols, numMines) {
   // Calculate the number of neighbor mines for each cell
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
-      if (!board[i][j].isMine) {
-        for (let x = -1; x <= 1; x++) {
-          for (let y = -1; y <= 1; y++) {
-            if (
-              i + x >= 0 &&
-              i + x < rows &&
-              j + y >= 0 &&
-              j + y < cols &&
-              board[i + x][j + y].isMine
-            ) {
-              board[i][j].neighborMines++;
-            }
+      const cell = board[i][j];
+
+      if (cell.isMine) {
+        // Skip calculation for mine cells
+        continue;
+      }
+
+      let neighborMines = 0;
+
+      // Check each neighbor cell
+      for (let x = Math.max(i - 1, 0); x <= Math.min(i + 1, rows - 1); x++) {
+        for (let y = Math.max(j - 1, 0); y <= Math.min(j + 1, cols - 1); y++) {
+          if (board[x][y].isMine) {
+            neighborMines++;
           }
         }
       }
+
+      cell.neighborMines = neighborMines;
     }
   }
 
   return board;
 }
 
-// Function to reveal a cell
 // Function to reveal a cell
 function revealCell(board, row, col) {
   const cell = board[row][col];
